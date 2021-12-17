@@ -1,7 +1,7 @@
 # 又一个Taichi语言的Ray Tracer
 
 ## 背景简介
-这个Ray Tracer基本上是照搬了Peter Shirley的第一本小书[_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)，在我写的时候参考的是Version 3.2.3这个版本。应该比其他中文博客删改了不少内容。果然Peter Shirley不是标题党，我在国庆期间用了2号、3号两天就写完了。期间还参考了moranzcw大佬[一年前的左右](https://forum.taichi.graphics/t/homework-0/756) (主要是抄了几个物体的定义)及其帖子下其他人的代码，在此表示感谢。
+这个Ray Tracer基本上是照搬了Peter Shirley的第一本小书[_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)，在我写的时候参考的是Version 3.2.3这个版本。应该比其他中文博客删改了不少内容。果然Peter Shirley不是标题党，我在国庆期间用了2号、3号两天就写完了。~~ 期间还参考了moranzcw大佬[一年前的左右](https://forum.taichi.graphics/t/homework-0/756) (主要是抄了几个物体的定义)及其帖子下其他人的代码，在此表示感谢。~~ (现在已经基本原创)
 
 Taichi语言依附于Python，而我自己本身对Python不是那么的熟悉，更不用提Taichi了。Taichi语言的开发者带简化很多快速数值计算及并行开发的操作，但同时也增添了很多限制(比如我不知道class如何复制导致hit_record无法实现)。再加上python对OOP编程的不完全支持，我写的程序很不优雅，同时也没做足优化。
 
@@ -16,29 +16,49 @@ Taichi语言依附于Python，而我自己本身对Python不是那么的熟悉�
 之后加入了一些键鼠操作和录制功能
 
 除此之外还生成了一张书的封面图。不知道为什么原书中22*22个小球不能在我的电脑上生成，经过漫长的等待后，等我的只有被占用了11/15.9GB的内存，和因为使用虚拟内存而跑的飞快的硬盘，当然最后还是闪退了。
+
+Vulkan内核是真快(40fps+),可惜在渲染大模型时会RE
+
+BVH在小模型的时候只会徒增复杂度
 ## 成功效果展示
 ### 封面图(有小球卡在大球里了😂)
 ![Cover](./img/cover.jpg)
 ### Cornell Box的效果
 ![Cornell Box 1](./img/cornellbox_1.jpg)
 ![Cornell Box 2](./img/cornellbox_2.jpg)
-来个动图\
+来个动图
+
 ![Cornell Box Gif](img/output_min.gif)
+
+![Bunny in a Cornell Box](img/cornellbox_bunny.jpg)
+![Earth in a Cornell Box](img/cornellbox_earth.jpg)
+### 带贴图的模型渲染(来自[这儿](http://ys.biligame.com/pjdkx/)的模型并使用PmxEditor导出)
+让她站在盒子里要调参调半天,不搞了
+
+![刻晴!](img/keqing_1.jpg)
+![刻晴!!](img/keqing_2.jpg)
 ### 这是使用错误的随机函数导致的效果
 ![Wrong Cornell Box Gif](img/output_min_wrong.gif)
 ## 使用方法
-点击窗口来切换视点\
-j,k键调整水平视角\
-s键截图\
+点击窗口来切换视点
+
+j,k键调整水平视角
+
+上下左右键调整视点
+
+s键截图
+
 r键开启/终止录制
 ## 整体结构
 ```
 -LICENSE
--|ouput             如果开始录制的话，视频和动图会储存在这儿
--|img               示例图片
+-|ouput                     如果开始录制的话，视频和动图会储存在这儿
+-|img                       示例图片
 -README.MD
--raytracing.py      本体，生成一个Cornell Box
--dots_on_sphere.py  对随机化程序的可视化
+-earthmap.jpg               地球贴图
+-raytracing.py              本体，生成一个Cornell Box
+-raytracing_withou_BVH.py   上一个未加BVH的版本,模型简单的情况极快
+-dots_on_sphere.py          对随机化程序的可视化
 ```
 ## 运行方式
 应该都安装好taichi了吧
@@ -46,16 +66,19 @@ r键开启/终止录制
 `python3 raytracing.py`
 ## 还存在的问题
 - 如何优雅的ODOP编程，解决类的复制与传递
-- ti.random() 如何设置随机种子
-- 如何声明@ti.kernel中最外层循环串行
-- 如何手动释放内存
+- ~~ ti.random() 如何设置随机种子 ~~
+- ~~ 如何声明@ti.kernel中最外层循环串行 ~~
+- ~~ 如何管理内存 ~~
+- Vulkan在大模型时RE
 ## TODO(就写写，不一定会码)
 - [x] 渲染一张封面图
 - [x] 增加显式光源，渲染一个Cornell Box
-- [ ] 添加其他一些模型
-- [ ] 添加材质，贴图
-- [ ] 加入BVH
-- [ ] 加入三维模型.obj的读取与渲染，渲染一只Standford Rabbit
+- [x] 添加其他一些模型
+- [x] 添加材质，贴图
+- [x] 加入BVH
+- [x] 加入三维模型.obj的读取与渲染，渲染一只Standford Bunny
 - [x] 增加键鼠交互
-- [ ] 跟进下一本书的内容
-- [ ] 在学习了之后的课程后，使用更多Taichi的特性
+- [x] 跟进下一本书的内容
+- [x] 在学习了之后的课程后，使用更多Taichi的特性
+
+芜湖!完结_2021.12.17
